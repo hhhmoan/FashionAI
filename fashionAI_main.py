@@ -24,11 +24,33 @@ import csv
 import tensorflow as tf
 import numpy as np
 import resnet
+import argparse
+parser = argparse.ArgumentParser(description='Initial args.')
+parser.add_argument('--attr_index', type=int, default=0, help='The index of the attribute [0,7].')
+args, unknownargs = parser.parse_known_args()
+attr_index = args.attr_index
+
+AttrInfo = [{'AttrKey': 'skirt_length_labels', 'AttrValues': ['Invisible', 'Short Length', 'Knee Length', 'Midi Length', 'Ankle Length', 'Floor Length']}, 
+ {'AttrKey': 'coat_length_labels', 'AttrValues': ['Invisible', 'High Waist Length', 'Regular Length', 'Long Length', 'Micro Length', 'Knee Length', 'Midi Length', 'Ankle&Floor Length']}, 
+ {'AttrKey': 'collar_design_labels', 'AttrValues': ['Invisible', 'Shirt Collar', 'Peter Pan', 'Puritan Collar', 'Rib Collar']}, 
+ {'AttrKey': 'lapel_design_labels', 'AttrValues': ['Invisible', 'Notched', 'Collarless', 'Shawl Collar', 'Plus Size Shawl']}, 
+ {'AttrKey': 'neck_design_labels', 'AttrValues': ['Invisible', 'Turtle Neck', 'Ruffle Semi-High Collar', 'Low Turtle Neck', 'Draped Collar']}, 
+ {'AttrKey': 'pant_length_labels', 'AttrValues': ['Invisible', 'Short Pant', 'Mid Length', '3/4 Length', 'Cropped Pant', 'Full Length']}, 
+ {'AttrKey': 'sleeve_length_labels', 'AttrValues': ['Invisible', 'Sleeveless', 'Cup Sleeves', 'Short Sleeves', 'Elbow Sleeves', '3/4 Sleeves', 'Wrist Length', 'Long Sleeves', 'Extra Long Sleeves']}]
+
+#AttrValueLens = []
+for attr in AttrInfo:
+    attr['AttrValueLens'] = len(attr['AttrValues'])
+    #AttrValueLens.append(attr['AttrValueLens'])
+    #print(attr['AttrKey'], attr['AttrValueLens'], 'Values')
+
+attr = AttrInfo[attr_index]
+print('Use', attr['AttrKey'], '|', attr['AttrValueLens'], 'Values')
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 _DEFAULT_IMAGE_SIZE = 224
 _NUM_CHANNELS = 3
-_NUM_CLASSES = 5
+_NUM_CLASSES = attr['AttrValueLens']
 
 _NUM_IMAGES = {
     'train': 7378,
@@ -37,8 +59,8 @@ _NUM_IMAGES = {
 
 _NUM_TRAIN_FILES = 1024
 _SHUFFLE_BUFFER = 1500
+_TRAIN_STYLE = attr['AttrKey']#'neck_design_labels'#'skirt_length_labels'
 _TRAIN_CSV_PATH = './data/fashionAI_attributes_train_20180222/base/Annotations/label.csv'
-_TRAIN_STYLE = 'neck_design_labels'#'skirt_length_labels'
 _TRAIN_IMAGE_PATH = './data/fashionAI_attributes_train_20180222/base/'
 _TEST_CSV_PATH = "./data/fashionAI_attributes_test_a_20180222/rank/Tests/question.csv"
 _TEST_IMAGE_PATH = './data/fashionAI_attributes_test_a_20180222/rank/'
