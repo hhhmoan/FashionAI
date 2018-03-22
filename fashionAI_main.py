@@ -27,7 +27,7 @@ import resnet
 import argparse
 parser = argparse.ArgumentParser(description='Initial args.')
 parser.add_argument('--attr_index', type=int, default=0, help='The index of the attribute [0,7].')
-args = parser.parse_args()
+args, unknownargs = parser.parse_known_args()
 attr_index = args.attr_index
 
 AttrInfo = [{'AttrKey': 'skirt_length_labels', 'AttrValues': ['Invisible', 'Short Length', 'Knee Length', 'Midi Length', 'Ankle Length', 'Floor Length']}, 
